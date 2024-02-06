@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LotteryGameModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="LotteryGameModelStoreContainer">
+    <EntitySet Name="Users" EntityType="LotteryGameModel.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Lotteries" EntityType="LotteryGameModel.Store.Lotteries" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tickets" EntityType="LotteryGameModel.Store.Tickets" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Draws" EntityType="LotteryGameModel.Store.Draws" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Winners" EntityType="LotteryGameModel.Store.Winners" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="UsersTickets" Association="LotteryGameModel.Store.UsersTickets">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Tickets" EntitySet="Tickets" />
+    </AssociationSet>
+    <AssociationSet Name="LotteriesTickets" Association="LotteryGameModel.Store.LotteriesTickets">
+      <End Role="Lotteries" EntitySet="Lotteries" />
+      <End Role="Tickets" EntitySet="Tickets" />
+    </AssociationSet>
+    <AssociationSet Name="LotteriesDraws" Association="LotteryGameModel.Store.LotteriesDraws">
+      <End Role="Lotteries" EntitySet="Lotteries" />
+      <End Role="Draws" EntitySet="Draws" />
+    </AssociationSet>
+    <AssociationSet Name="DrawsWinners" Association="LotteryGameModel.Store.DrawsWinners">
+      <End Role="Draws" EntitySet="Draws" />
+      <End Role="Winners" EntitySet="Winners" />
+    </AssociationSet>
+    <AssociationSet Name="UsersWinners" Association="LotteryGameModel.Store.UsersWinners">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Winners" EntitySet="Winners" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="username" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="password_hash" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="balance" Type="decimal" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Lotteries">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ticket_price" Type="decimal" Nullable="false" />
+    <Property Name="start_time" Type="datetime" Nullable="false" />
+    <Property Name="end_time" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tickets">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id_fk" Type="int" Nullable="false" />
+    <Property Name="lottery_id_fk" Type="int" Nullable="false" />
+    <Property Name="numbers" Type="smallint" Nullable="false" />
+    <Property Name="purchase_time" Type="datetime" Nullable="false" />
+    <Property Name="is_winner" Type="bit" Nullable="false" />
+    <Property Name="User_Id" Type="int" Nullable="false" />
+    <Property Name="Lottery_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Draws">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="lottery_id_fk" Type="int" Nullable="false" />
+    <Property Name="draw_time" Type="datetime" Nullable="false" />
+    <Property Name="winning_numbers" Type="smallint" Nullable="false" />
+    <Property Name="Lottery_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Winners">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="draw_id_fk" Type="int" Nullable="false" />
+    <Property Name="user_id_fk" Type="int" Nullable="false" />
+    <Property Name="prize_amount" Type="decimal" Nullable="false" />
+    <Property Name="Draw_Id" Type="int" Nullable="false" />
+    <Property Name="User_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="UsersTickets">
+    <End Role="Users" Type="LotteryGameModel.Store.Users" Multiplicity="1" />
+    <End Role="Tickets" Type="LotteryGameModel.Store.Tickets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Tickets">
+        <PropertyRef Name="User_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LotteriesTickets">
+    <End Role="Lotteries" Type="LotteryGameModel.Store.Lotteries" Multiplicity="1" />
+    <End Role="Tickets" Type="LotteryGameModel.Store.Tickets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lotteries">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Tickets">
+        <PropertyRef Name="Lottery_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LotteriesDraws">
+    <End Role="Lotteries" Type="LotteryGameModel.Store.Lotteries" Multiplicity="1" />
+    <End Role="Draws" Type="LotteryGameModel.Store.Draws" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lotteries">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Draws">
+        <PropertyRef Name="Lottery_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DrawsWinners">
+    <End Role="Draws" Type="LotteryGameModel.Store.Draws" Multiplicity="1" />
+    <End Role="Winners" Type="LotteryGameModel.Store.Winners" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Draws">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Winners">
+        <PropertyRef Name="Draw_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UsersWinners">
+    <End Role="Users" Type="LotteryGameModel.Store.Users" Multiplicity="1" />
+    <End Role="Winners" Type="LotteryGameModel.Store.Winners" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Winners">
+        <PropertyRef Name="User_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="LotteryGameModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="LotteryGameModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="LotteryGameModel.Users" />
+          <EntitySet Name="Lotteries" EntityType="LotteryGameModel.Lotteries" />
+          <EntitySet Name="Tickets" EntityType="LotteryGameModel.Tickets" />
+          <EntitySet Name="Draws" EntityType="LotteryGameModel.Draws" />
+          <EntitySet Name="Winners" EntityType="LotteryGameModel.Winners" />
+          <AssociationSet Name="UsersTickets" Association="LotteryGameModel.UsersTickets">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tickets" EntitySet="Tickets" />
+          </AssociationSet>
+          <AssociationSet Name="LotteriesTickets" Association="LotteryGameModel.LotteriesTickets">
+            <End Role="Lotteries" EntitySet="Lotteries" />
+            <End Role="Tickets" EntitySet="Tickets" />
+          </AssociationSet>
+          <AssociationSet Name="LotteriesDraws" Association="LotteryGameModel.LotteriesDraws">
+            <End Role="Lotteries" EntitySet="Lotteries" />
+            <End Role="Draws" EntitySet="Draws" />
+          </AssociationSet>
+          <AssociationSet Name="DrawsWinners" Association="LotteryGameModel.DrawsWinners">
+            <End Role="Draws" EntitySet="Draws" />
+            <End Role="Winners" EntitySet="Winners" />
+          </AssociationSet>
+          <AssociationSet Name="UsersWinners" Association="LotteryGameModel.UsersWinners">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Winners" EntitySet="Winners" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" Nullable="false" />
+          <Property Name="email" Type="String" Nullable="false" />
+          <Property Name="password_hash" Type="String" Nullable="false" />
+          <Property Name="balance" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="Tickets" Relationship="LotteryGameModel.UsersTickets" FromRole="Users" ToRole="Tickets" />
+          <NavigationProperty Name="Winners" Relationship="LotteryGameModel.UsersWinners" FromRole="Users" ToRole="Winners" />
+        </EntityType>
+        <EntityType Name="Lotteries">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" />
+          <Property Name="description" Type="String" Nullable="false" />
+          <Property Name="ticket_price" Type="Decimal" Nullable="false" />
+          <Property Name="start_time" Type="DateTime" Nullable="false" />
+          <Property Name="end_time" Type="String" Nullable="false" />
+          <NavigationProperty Name="Tickets" Relationship="LotteryGameModel.LotteriesTickets" FromRole="Lotteries" ToRole="Tickets" />
+          <NavigationProperty Name="Draws" Relationship="LotteryGameModel.LotteriesDraws" FromRole="Lotteries" ToRole="Draws" />
+        </EntityType>
+        <EntityType Name="Tickets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id_fk" Type="Int32" Nullable="false" />
+          <Property Name="lottery_id_fk" Type="Int32" Nullable="false" />
+          <Property Name="numbers" Type="Int16" Nullable="false" />
+          <Property Name="purchase_time" Type="DateTime" Nullable="false" />
+          <Property Name="is_winner" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="LotteryGameModel.UsersTickets" FromRole="Tickets" ToRole="Users" />
+          <NavigationProperty Name="Lottery" Relationship="LotteryGameModel.LotteriesTickets" FromRole="Tickets" ToRole="Lotteries" />
+        </EntityType>
+        <EntityType Name="Draws">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="lottery_id_fk" Type="Int32" Nullable="false" />
+          <Property Name="draw_time" Type="DateTime" Nullable="false" />
+          <Property Name="winning_numbers" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Lottery" Relationship="LotteryGameModel.LotteriesDraws" FromRole="Draws" ToRole="Lotteries" />
+          <NavigationProperty Name="Winners" Relationship="LotteryGameModel.DrawsWinners" FromRole="Draws" ToRole="Winners" />
+        </EntityType>
+        <EntityType Name="Winners">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="draw_id_fk" Type="Int32" Nullable="false" />
+          <Property Name="user_id_fk" Type="Int32" Nullable="false" />
+          <Property Name="prize_amount" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="Draw" Relationship="LotteryGameModel.DrawsWinners" FromRole="Winners" ToRole="Draws" />
+          <NavigationProperty Name="User" Relationship="LotteryGameModel.UsersWinners" FromRole="Winners" ToRole="Users" />
+        </EntityType>
+        <Association Name="UsersTickets">
+          <End Type="LotteryGameModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="LotteryGameModel.Tickets" Role="Tickets" Multiplicity="*" />
+        </Association>
+        <Association Name="LotteriesTickets">
+          <End Type="LotteryGameModel.Lotteries" Role="Lotteries" Multiplicity="1" />
+          <End Type="LotteryGameModel.Tickets" Role="Tickets" Multiplicity="*" />
+        </Association>
+        <Association Name="LotteriesDraws">
+          <End Type="LotteryGameModel.Lotteries" Role="Lotteries" Multiplicity="1" />
+          <End Type="LotteryGameModel.Draws" Role="Draws" Multiplicity="*" />
+        </Association>
+        <Association Name="DrawsWinners">
+          <End Type="LotteryGameModel.Draws" Role="Draws" Multiplicity="1" />
+          <End Type="LotteryGameModel.Winners" Role="Winners" Multiplicity="*" />
+        </Association>
+        <Association Name="UsersWinners">
+          <End Type="LotteryGameModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="LotteryGameModel.Winners" Role="Winners" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="LotteryGameModelStoreContainer" CdmEntityContainer="LotteryGameModelContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(LotteryGameModel.Users)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="password_hash" ColumnName="password_hash" />
+          <ScalarProperty Name="balance" ColumnName="balance" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Lotteries">
+      <EntityTypeMapping TypeName="IsTypeOf(LotteryGameModel.Lotteries)">
+        <MappingFragment StoreEntitySet="Lotteries">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="ticket_price" ColumnName="ticket_price" />
+          <ScalarProperty Name="start_time" ColumnName="start_time" />
+          <ScalarProperty Name="end_time" ColumnName="end_time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tickets">
+      <EntityTypeMapping TypeName="IsTypeOf(LotteryGameModel.Tickets)">
+        <MappingFragment StoreEntitySet="Tickets">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="user_id_fk" ColumnName="user_id_fk" />
+          <ScalarProperty Name="lottery_id_fk" ColumnName="lottery_id_fk" />
+          <ScalarProperty Name="numbers" ColumnName="numbers" />
+          <ScalarProperty Name="purchase_time" ColumnName="purchase_time" />
+          <ScalarProperty Name="is_winner" ColumnName="is_winner" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Draws">
+      <EntityTypeMapping TypeName="IsTypeOf(LotteryGameModel.Draws)">
+        <MappingFragment StoreEntitySet="Draws">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="lottery_id_fk" ColumnName="lottery_id_fk" />
+          <ScalarProperty Name="draw_time" ColumnName="draw_time" />
+          <ScalarProperty Name="winning_numbers" ColumnName="winning_numbers" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Winners">
+      <EntityTypeMapping TypeName="IsTypeOf(LotteryGameModel.Winners)">
+        <MappingFragment StoreEntitySet="Winners">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="draw_id_fk" ColumnName="draw_id_fk" />
+          <ScalarProperty Name="user_id_fk" ColumnName="user_id_fk" />
+          <ScalarProperty Name="prize_amount" ColumnName="prize_amount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UsersTickets" TypeName="LotteryGameModel.UsersTickets" StoreEntitySet="Tickets">
+      <EndProperty Name="Users">
+        <ScalarProperty Name="Id" ColumnName="User_Id" />
+      </EndProperty>
+      <EndProperty Name="Tickets">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LotteriesTickets" TypeName="LotteryGameModel.LotteriesTickets" StoreEntitySet="Tickets">
+      <EndProperty Name="Lotteries">
+        <ScalarProperty Name="Id" ColumnName="Lottery_Id" />
+      </EndProperty>
+      <EndProperty Name="Tickets">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LotteriesDraws" TypeName="LotteryGameModel.LotteriesDraws" StoreEntitySet="Draws">
+      <EndProperty Name="Lotteries">
+        <ScalarProperty Name="Id" ColumnName="Lottery_Id" />
+      </EndProperty>
+      <EndProperty Name="Draws">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DrawsWinners" TypeName="LotteryGameModel.DrawsWinners" StoreEntitySet="Winners">
+      <EndProperty Name="Draws">
+        <ScalarProperty Name="Id" ColumnName="Draw_Id" />
+      </EndProperty>
+      <EndProperty Name="Winners">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UsersWinners" TypeName="LotteryGameModel.UsersWinners" StoreEntitySet="Winners">
+      <EndProperty Name="Users">
+        <ScalarProperty Name="Id" ColumnName="User_Id" />
+      </EndProperty>
+      <EndProperty Name="Winners">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
